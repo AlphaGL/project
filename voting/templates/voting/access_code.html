@@ -1,0 +1,759 @@
+{% extends 'voting/main.html' %}
+{% block title %}BME FUTO - Secure Access Portal{% endblock %}
+{% block header %}Secure Access Verification{% endblock %}
+
+{% block body %}
+<style>
+    /* Enhanced Access Code Page Styles */
+    .access-container {
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .access-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        animation: drift 20s linear infinite;
+    }
+
+    @keyframes drift {
+        0% { transform: translateX(0) translateY(0); }
+        100% { transform: translateX(-10px) translateY(-10px); }
+    }
+
+    .access-container::after {
+        content: '';
+        position: absolute;
+        top: 20%;
+        right: 10%;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.1); }
+    }
+
+    .security-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 24px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12);
+        padding: 0;
+        max-width: 450px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .security-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    }
+
+    .security-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header-security {
+        padding: 2.5rem 2rem 1.5rem;
+        text-align: center;
+        position: relative;
+        background: transparent;
+    }
+
+    .security-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+        animation: glow 3s ease-in-out infinite alternate;
+        position: relative;
+    }
+
+    .security-icon::before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        border-radius: 50%;
+        z-index: -1;
+        opacity: 0;
+        animation: rotate 3s linear infinite;
+    }
+
+    @keyframes glow {
+        0% { box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3); }
+        100% { box-shadow: 0 20px 45px rgba(102, 126, 234, 0.5); }
+    }
+
+    @keyframes rotate {
+        0% { transform: rotate(0deg); opacity: 0.3; }
+        100% { transform: rotate(360deg); opacity: 0.3; }
+    }
+
+    .security-icon i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    .card-title-security {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 0.5rem;
+    }
+
+    .card-subtitle-security {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin: 0;
+        font-weight: 400;
+    }
+
+    .card-body-security {
+        padding: 0 2rem 2.5rem;
+    }
+
+    .security-notice {
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .security-notice:hover {
+        background: rgba(16, 185, 129, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .security-notice .icon {
+        width: 24px;
+        height: 24px;
+        background: #10b981;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .security-notice .icon i {
+        color: white;
+        font-size: 0.75rem;
+    }
+
+    .security-notice .text {
+        color: #047857;
+        font-size: 0.9rem;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+
+    .form-group-security {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-label-security {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-control-security {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-family: 'Courier New', monospace;
+        background: rgba(248, 250, 252, 0.8);
+        transition: all 0.3s ease;
+        text-align: center;
+        letter-spacing: 2px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .form-control-security:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .form-control-security::placeholder {
+        font-family: 'Inter', sans-serif;
+        text-transform: none;
+        letter-spacing: normal;
+        font-weight: 400;
+        opacity: 0.6;
+    }
+
+    .btn-security {
+        width: 100%;
+        padding: 1.2rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        font-family: 'Poppins', sans-serif;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-transform: none;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        margin-top: 0.5rem;
+    }
+
+    .btn-security::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-security:hover::before {
+        left: 100%;
+    }
+
+    .btn-security:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-security:active {
+        transform: translateY(-1px);
+    }
+
+    .btn-security.loading {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    .btn-security.loading::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top: 2px solid white;
+        border-radius: 50%;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        animation: spin 1s linear infinite;
+    }
+
+    .messages-container {
+        margin-top: 1.5rem;
+    }
+
+    .message-item {
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message-error {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #dc2626;
+    }
+
+    .message-success {
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #059669;
+    }
+
+    .message-warning {
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.2);
+        color: #d97706;
+    }
+
+    .message-info {
+        background: rgba(59, 130, 246, 0.08);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        color: #2563eb;
+    }
+
+    .message-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.75rem;
+        color: white;
+    }
+
+    .message-error .message-icon {
+        background: #dc2626;
+    }
+
+    .message-success .message-icon {
+        background: #059669;
+    }
+
+    .message-warning .message-icon {
+        background: #d97706;
+    }
+
+    .message-info .message-icon {
+        background: #2563eb;
+    }
+
+    .access-footer {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(226, 232, 240, 0.3);
+    }
+
+    .access-footer p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .help-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .help-link::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #667eea;
+        transition: width 0.3s ease;
+    }
+
+    .help-link:hover::after {
+        width: 100%;
+    }
+
+    .help-link:hover {
+        color: #5a67d8;
+        transform: translateY(-1px);
+    }
+
+    /* Input Animation Effects */
+    .form-control-security.typing {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .code-dots {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .code-dots.show {
+        opacity: 1;
+    }
+
+    .code-dot {
+        width: 8px;
+        height: 8px;
+        background: #667eea;
+        border-radius: 50%;
+        animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+
+    .code-dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .code-dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes pulse-dot {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .access-container {
+            padding: 1rem;
+        }
+
+        .security-card {
+            max-width: 100%;
+            margin: 0 1rem;
+        }
+
+        .card-header-security {
+            padding: 2rem 1.5rem 1rem;
+        }
+
+        .card-body-security {
+            padding: 0 1.5rem 2rem;
+        }
+
+        .security-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .security-icon i {
+            font-size: 1.5rem;
+        }
+
+        .card-title-security {
+            font-size: 1.5rem;
+        }
+
+        .form-control-security {
+            font-size: 1rem;
+            padding: 0.875rem 1rem;
+        }
+
+        .btn-security {
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .card-title-security {
+            font-size: 1.25rem;
+        }
+
+        .card-subtitle-security {
+            font-size: 0.9rem;
+        }
+
+        .form-control-security {
+            letter-spacing: 1px;
+        }
+    }
+</style>
+
+<div class="access-container">
+    <div class="security-card" data-aos="zoom-in" data-aos-duration="600">
+        <div class="card-header-security">
+            <div class="security-icon">
+                <i class="bi bi-shield-lock"></i>
+            </div>
+            <h2 class="card-title-security">Access Verification</h2>
+            <p class="card-subtitle-security">Enter your secure access code to continue</p>
+        </div>
+
+        <div class="card-body-security">
+            <div class="security-notice" data-aos="fade-up" data-aos-delay="200">
+                <div class="icon">
+                    <i class="bi bi-check"></i>
+                </div>
+                <div class="text">
+                    This portal is protected by advanced encryption. Your access code is unique and time-sensitive.
+                </div>
+            </div>
+
+            <form method="post" id="accessForm" data-aos="fade-up" data-aos-delay="300">
+                {% csrf_token %}
+                
+                <div class="form-group-security">
+                    <label class="form-label-security">
+                        <i class="bi bi-key"></i>
+                        Access Code
+                    </label>
+                    {% for field in form %}
+                        <input type="text" 
+                               name="{{ field.name }}" 
+                               class="form-control-security" 
+                               id="accessCode"
+                               placeholder="Enter your access code"
+                               maxlength="20"
+                               autocomplete="off"
+                               required>
+                    {% endfor %}
+                    <div class="code-dots" id="codeDots">
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                        <div class="code-dot"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-security" id="submitBtn">
+                    <i class="bi bi-unlock me-2"></i>
+                    Verify Access Code
+                </button>
+            </form>
+
+            {% if messages %}
+                <div class="messages-container" data-aos="fade-up" data-aos-delay="400">
+                    {% for message in messages %}
+                        <div class="message-item message-{{ message.level_tag|default:'info' }}">
+                            <div class="message-icon">
+                                {% if message.level_tag == 'error' %}
+                                    <i class="bi bi-x"></i>
+                                {% elif message.level_tag == 'success' %}
+                                    <i class="bi bi-check"></i>
+                                {% elif message.level_tag == 'warning' %}
+                                    <i class="bi bi-exclamation"></i>
+                                {% else %}
+                                    <i class="bi bi-info"></i>
+                                {% endif %}
+                            </div>
+                            <div class="message-text">{{ message }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="access-footer" data-aos="fade-up" data-aos-delay="500">
+                <p>
+                    <i class="bi bi-question-circle me-1"></i>
+                    Need help accessing your account?<br>
+                    <a href="#" class="help-link">Contact Technical Support</a>
+                </p>
+                <p class="mt-2">
+                    <small>
+                        <i class="bi bi-shield-check me-1"></i>
+                        Your connection is secure and encrypted
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const accessForm = document.getElementById('accessForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const accessCodeInput = document.getElementById('accessCode');
+        const codeDots = document.getElementById('codeDots');
+
+        // Enhanced input interactions
+        accessCodeInput.addEventListener('input', function() {
+            const value = this.value;
+            
+            // Show typing indicator
+            this.classList.add('typing');
+            codeDots.classList.add('show');
+            
+            // Auto-format code (remove spaces, uppercase)
+            this.value = value.replace(/\s/g, '').toUpperCase();
+            
+            // Visual feedback based on length
+            if (this.value.length >= 6) {
+                this.style.borderColor = 'var(--success-color)';
+                this.style.backgroundColor = 'rgba(16, 185, 129, 0.05)';
+            } else {
+                this.style.borderColor = '#e2e8f0';
+                this.style.backgroundColor = 'rgba(248, 250, 252, 0.8)';
+            }
+            
+            // Clear typing indicator after delay
+            clearTimeout(this.typingTimer);
+            this.typingTimer = setTimeout(() => {
+                this.classList.remove('typing');
+                if (this.value.length === 0) {
+                    codeDots.classList.remove('show');
+                }
+            }, 1000);
+        });
+
+        // Focus effects
+        accessCodeInput.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+            codeDots.classList.add('show');
+        });
+
+        accessCodeInput.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+                codeDots.classList.remove('show');
+            }
+            this.classList.remove('typing');
+        });
+
+        // Prevent spaces and enforce uppercase
+        accessCodeInput.addEventListener('keypress', function(e) {
+            if (e.key === ' ') {
+                e.preventDefault();
+            }
+        });
+
+        // Enhanced form submission
+        accessForm.addEventListener('submit', function(e) {
+            const code = accessCodeInput.value.trim();
+            
+            if (code.length < 4) {
+                e.preventDefault();
+                
+                // Show error animation
+                accessCodeInput.style.borderColor = 'var(--danger-color)';
+                accessCodeInput.style.backgroundColor = 'rgba(239, 68, 68, 0.05)';
+                accessCodeInput.classList.add('shake');
+                
+                setTimeout(() => {
+                    accessCodeInput.classList.remove('shake');
+                    accessCodeInput.style.borderColor = '#e2e8f0';
+                    accessCodeInput.style.backgroundColor = 'rgba(248, 250, 252, 0.8)';
+                }, 500);
+                
+                return false;
+            }
+
+            // Show loading state
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<i class="bi bi-arrow-repeat me-2"></i>Verifying...';
+            accessCodeInput.disabled = true;
+            
+            // Add subtle delay for better UX
+            setTimeout(() => {
+                // Form will submit naturally
+            }, 800);
+        });
+
+        // Auto-submit when code reaches certain length (optional)
+        accessCodeInput.addEventListener('input', function() {
+            if (this.value.length === 12) { // Adjust based on your code length
+                setTimeout(() => {
+                    if (this.value.length === 12) {
+                        accessForm.dispatchEvent(new Event('submit'));
+                    }
+                }, 500);
+            }
+        });
+
+        // Add shake animation for errors
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            .shake {
+                animation: shake 0.5s ease-in-out;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Enhanced security icon animation
+        const securityIcon = document.querySelector('.security-icon');
+        let rotationAngle = 0;
+        
+        setInterval(() => {
+            rotationAngle += 1;
+            securityIcon.style.transform = `rotate(${Math.sin(rotationAngle * 0.05) * 5}deg)`;
+        }, 50);
+
+        // Add particles effect (optional)
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: rgba(102, 126, 234, 0.6);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: -1;
+            `;
+            
+            document.querySelector('.access-container').appendChild(particle);
+            
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            
+            particle.animate([
+                { opacity: 0, transform: 'scale(0)' },
+                { opacity: 1, transform: 'scale(1)' },
+                { opacity: 0, transform: 'scale(0)' }
+            ], {
+                duration: 3000,
+                easing: 'ease-out'
+            }).onfinish = () => particle.remove();
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 2000);
+    });
+</script>
+{% endblock %}
