@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-a(1(wp+^gn^fi64_wz9)qp*9257nxj^s$c-l4@6asjbl^$n)l*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["nabesbmefutoelection.pythonanywhere.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["https://nabes-bme-election.onrender.com", "nabes-bme-election.onrender.com", "www.nabes-bme-election.onrender.com","127.0.0.1"]
 
 
 # Database
