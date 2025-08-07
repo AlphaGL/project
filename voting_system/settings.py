@@ -32,7 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-a(1(wp+^gn^fi64_wz9)qp*9257nxj^s$c-l4@6asjbl^$n)l*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["https://nabes-bme-election.onrender.com", "nabes-bme-election.onrender.com", "www.nabes-bme-election.onrender.com","127.0.0.1"]
 
