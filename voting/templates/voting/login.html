@@ -445,8 +445,11 @@
             <div class="col-lg-8">
                 <div class="stats-row">
                     <div class="stat-item">
-                        <div class="stat-number">2024</div>
-                        <div class="stat-label">Election Year</div>
+                        
+                    {% load tz %}
+
+                    <div class="stat-number">{% now "Y" %}</div>
+                    <div class="stat-label">Election Year</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number">100%</div>
