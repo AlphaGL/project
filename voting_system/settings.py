@@ -40,6 +40,8 @@ ALLOWED_HOSTS = ["nabesbmefutoelection.pythonanywhere.com", "127.0.0.1"]
 # Database
 DATABASES = {
     # Supabase db
+    ## Email: thewatch2d@gmail.com
+    ## Password: Ibeawuchi@watch2d.com
     'default': dj_database_url.parse(
         'postgresql://postgres.yrlbajjjibiohsbcotmo:Nabes-bme-election_db@aws-0-eu-north-1.pooler.supabase.com:6543/postgres'
     ),
@@ -94,9 +96,9 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 cloudinary.config( 
-    cloud_name = "dasmnlwnm",  
-    api_key = "862355491194945",  
-    api_secret = "RV5MD_sYzeVvprYLQ6-EPYmr6U0"
+    cloud_name = "dgzjegrcm",  
+    api_key = "275554513554491",  
+    api_secret = "sdA3bKAcsECuooRNa1Fu1lcjdEE"
 )
 
 WSGI_APPLICATION = 'voting_system.wsgi.application'
