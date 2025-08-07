@@ -11,7 +11,16 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
 import os
+from decouple import config
+import cloudinary
+
+# cloudinary imports
+import cloudinary.uploader
+import cloudinary.api
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,6 +37,13 @@ DEBUG = True
 ALLOWED_HOSTS = ["nabesbmefutoelection.pythonanywhere.com", "127.0.0.1"]
 
 
+# Database
+DATABASES = {
+    # Supabase db
+    'default': dj_database_url.parse(
+        'postgresql://postgres.yrlbajjjibiohsbcotmo:Nabes-bme-election_db@aws-0-eu-north-1.pooler.supabase.com:6543/postgres'
+    ),
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,7 +53,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # custom apps
     'voting.apps.VotingConfig',
+
+    # cloudinary 
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -68,18 +90,20 @@ TEMPLATES = [
     },
 ]
 
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+cloudinary.config( 
+    cloud_name = "dasmnlwnm",  
+    api_key = "862355491194945",  
+    api_secret = "RV5MD_sYzeVvprYLQ6-EPYmr6U0"
+)
+
 WSGI_APPLICATION = 'voting_system.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 # Password validation

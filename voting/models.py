@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class Position(models.Model):
@@ -55,7 +56,7 @@ class Student(AbstractBaseUser):
 class Contestant(models.Model):
     position = models.ForeignKey(Position, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='contestants/', default='default-contestant.jpg')
+    image = CloudinaryField('contestants')
 
     def __str__(self):
         return f"{self.name} - {self.position.name}"
