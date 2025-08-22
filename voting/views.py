@@ -420,16 +420,6 @@ def vote_view(request):
 
 
 
-
-def vote_success(request):
-    logout(request)
-    return render(request, 'voting/vote_success.html')
-
-
-
-
-
-
 @login_required
 @staff_member_required
 @custom_auth_required

@@ -53,6 +53,31 @@ class Student(AbstractBaseUser):
         voted_positions = Vote.objects.filter(student=self).values_list('position_id', flat=True)
         return Position.objects.exclude(id__in=voted_positions).order_by('importance')
 
+    # Required permission methods for Django admin
+    def has_perm(self, perm, obj=None):
+        """
+        Return True if the user has the named permission. 
+        For superusers, this always returns True.
+        """
+        if self.is_active and self.is_superuser:
+            return True
+        return False
+
+    def has_perms(self, perm_list, obj=None):
+        """
+        Return True if the user has each of the named permissions.
+        """
+        return all(self.has_perm(perm, obj) for perm in perm_list)
+
+    def has_module_perms(self, app_label):
+        """
+        Return True if the user has any permissions in the given app label.
+        For superusers, this always returns True.
+        """
+        if self.is_active and self.is_superuser:
+            return True
+        return False
+
 class Contestant(models.Model):
     position = models.ForeignKey(Position, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)

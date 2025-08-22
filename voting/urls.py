@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import BmeLoginView, vote_position, next_position, vote_view, vote_success, admin_dashboard, register_student, CompletedView
+from .views import BmeLoginView, vote_position, next_position, vote_view, admin_dashboard, register_student, CompletedView
 from .views import reset_password
 
 urlpatterns = [
@@ -9,7 +9,6 @@ urlpatterns = [
     path('vote/<int:position_id>/', vote_position, name='vote_position'),
     path('next_position/<int:position_id>/', next_position, name='next_position'),
     path('vote/', vote_view, name='vote'),
-    path('vote_success/', vote_success, name='vote_success'),
     path('admin_dashboard/', admin_dashboard, name='admin_dashboard'),
     path('completed/', CompletedView.as_view(), name='completed'),
     path('reset/', views.reset_all, name='reset_all'),

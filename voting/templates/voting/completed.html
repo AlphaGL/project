@@ -348,7 +348,16 @@
             }
             
             if (countdown <= 0) {
-                window.location.href = "https://nabesbmefutoelection.pythonanywhere.com/";
+                countdownElement.textContent = '0';
+                countdownElement.parentElement.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--primary-blue);"></i>';
+                setTimeout(() => {
+                    try {
+                        window.location.href = "{% url 'login' %}";
+                    } catch (error) {
+                        console.error('Redirect failed:', error);
+                        window.location.replace("{% url 'login' %}");
+                    }
+                }, 500);
             }
         }
 

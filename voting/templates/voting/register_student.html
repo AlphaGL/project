@@ -656,7 +656,7 @@
 
                             <!-- Password Field (if using UserCreationForm) -->
                             {% for field in form %}
-                                {% if field.name == 'password1' %}
+                                {% if field.name == 'password' %}
                                     <div class="form-group-modern">
                                         <label class="form-label-modern">
                                             <i class="bi bi-lock me-2"></i>Password
@@ -682,7 +682,7 @@
                                             <small class="text-muted mt-1 d-block">{{ field.help_text }}</small>
                                         {% endif %}
                                     </div>
-                                {% elif field.name == 'password2' %}
+                                {% elif field.name == 'password' %}
                                     <div class="form-group-modern">
                                         <label class="form-label-modern">
                                             <i class="bi bi-lock-fill me-2"></i>Confirm Password

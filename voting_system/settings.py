@@ -32,18 +32,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-a(1(wp+^gn^fi64_wz9)qp*9257nxj^s$c-l4@6asjbl^$n)l*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["https://nabes-bme-election.onrender.com", "nabes-bme-election.onrender.com", "www.nabes-bme-election.onrender.com","127.0.0.1"]
 
 
 # Database
 DATABASES = {
-    # Supabase db
+    # neon.tech
     ## Email: thewatch2d@gmail.com
-    ## Password: Ibeawuchi@watch2d.com
     'default': dj_database_url.parse(
-        'postgresql://postgres.yrlbajjjibiohsbcotmo:Nabes-bme-election_db@aws-0-eu-north-1.pooler.supabase.com:6543/postgres'
+        'postgresql://neondb_owner:npg_FwbGQ8WoVn1r@ep-odd-glitter-ad4ndj5m-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
     ),
 }
 # Application definition
@@ -58,6 +57,9 @@ INSTALLED_APPS = [
 
     # custom apps
     'voting.apps.VotingConfig',
+
+    # other packages
+    'widget_tweaks',
 
     # cloudinary 
     'cloudinary',
