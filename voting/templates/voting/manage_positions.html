@@ -522,8 +522,9 @@
                 <div class="stat-number">{{ positions|length|add:"0" }}</div>
                 <div class="stat-label">Active Elections</div>
             </div>
+            {% load tz %}
             <div class="stat-item">
-                <div class="stat-number">2024</div>
+                <div class="stat-number">{% now "Y" %}</div>
                 <div class="stat-label">Election Year</div>
             </div>
         </div>

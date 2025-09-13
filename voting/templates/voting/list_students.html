@@ -542,7 +542,7 @@
                                         <div class="stat-label">Academic Years</div>
                                     </div>
                                     <div class="stat-item">
-                                        <div class="stat-number">{{ students_by_year.items|first|last|length|default:0 }}</div>
+                                        <div class="stat-number">{{ largest_group_size|default:0 }}</div>
                                         <div class="stat-label">Largest Year Group</div>
                                     </div>
                                 </div>

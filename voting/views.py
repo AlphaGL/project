@@ -144,35 +144,36 @@ def enter_access_code(request):
 
 def list_students(request):
     if not request.session.get('has_access'):
-        return redirect('enter_access_code')  # Redirect to the access code page
+        return redirect('enter_access_code')
 
     if request.method == 'POST':
-        # Handle the deletion of students
         student_id = request.POST.get('delete_student_id')
         if student_id:
             student = get_object_or_404(Student, id=student_id)
             student.delete()
             messages.success(request, 'Student deleted successfully.')
-            return redirect('list_students')  # Refresh the page after deletion
+            return redirect('list_students')
 
     students = Student.objects.all()
     students_by_year = {}
     student_count_by_year = {}
 
     for student in students:
-        year = student.reg_number[:4]  # Assuming registration_number starts with the year
+        year = student.reg_number[:4]  # Assuming reg starts with year
         if year not in students_by_year:
             students_by_year[year] = []
-            student_count_by_year[year] = 0  # Initialize count
+            student_count_by_year[year] = 0
         students_by_year[year].append(student)
-        student_count_by_year[year] += 1  # Increment count
+        student_count_by_year[year] += 1
 
-    total_students = students.count()  # Total number of students
+    total_students = students.count()
+    largest_group_size = max(student_count_by_year.values(), default=0)  # 👈 NEW
 
     return render(request, 'voting/list_students.html', {
         'students_by_year': students_by_year,
         'student_count_by_year': student_count_by_year,
-        'total_students': total_students
+        'total_students': total_students,
+        'largest_group_size': largest_group_size,  # 👈 pass to template
     })
 
 
