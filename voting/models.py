@@ -2,12 +2,28 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+from django.db import models
+
 class Position(models.Model):
+    IMPORTANCE_CHOICES = [
+        (1, "1 - Very High"),
+        (2, "2 - High"),
+        (3, "3"),
+        (4, "4"),
+        (5, "5 - Medium"),
+        (6, "6"),
+        (7, "7"),
+        (8, "8 - Low"),
+        (9, "9 - Very Low"),
+        (10, "10 - Lowest"),
+    ]
+
     name = models.CharField(max_length=100)
-    importance = models.PositiveIntegerField()
+    importance = models.PositiveIntegerField(choices=IMPORTANCE_CHOICES)
 
     def __str__(self):
         return self.name
+
 
 class StudentManager(BaseUserManager):
     def create_user(self, reg_number, full_name, password=None):

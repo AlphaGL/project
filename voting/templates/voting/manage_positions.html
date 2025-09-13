@@ -564,11 +564,12 @@
                                 
                                 {% if field.name == 'name' %}
                                     <input type="text" 
-                                           name="{{ field.name }}" 
-                                           class="form-control-modern" 
-                                           placeholder="e.g., President, Vice President, Secretary"
-                                           value="{% if field.value %}{{ field.value }}{% endif %}"
-                                           {% if field.field.required %}required{% endif %}>
+                                        name="{{ field.name }}" 
+                                        class="form-control-modern" 
+                                        placeholder="e.g., President, Vice President, Secretary"
+                                        value="{% if field.value %}{{ field.value }}{% endif %}"
+                                        {% if field.field.required %}required{% endif %}>
+                                
                                 {% elif field.name == 'importance' %}
                                     <select name="{{ field.name }}" class="form-control-modern" {% if field.field.required %}required{% endif %}>
                                         <option value="">Select importance level</option>
@@ -578,6 +579,11 @@
                                             </option>
                                         {% endfor %}
                                     </select>
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Note: <strong>1</strong> is the highest importance. The larger the number, the lower the importance.
+                                    </small>
+                                
                                 {% else %}
                                     {{ field }}
                                 {% endif %}
@@ -591,7 +597,7 @@
                                     {% endfor %}
                                 {% endif %}
                                 
-                                {% if field.help_text %}
+                                {% if field.help_text and field.name != 'importance' %}
                                     <small class="text-muted mt-1 d-block">{{ field.help_text }}</small>
                                 {% endif %}
                             </div>
