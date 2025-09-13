@@ -633,11 +633,11 @@
                                         <i class="bi bi-bar-chart-fill"></i>
                                         Importance: {{ position.importance }}
                                         <span class="importance-badge 
-                                            {% if position.importance >= 8 %}importance-high
-                                            {% elif position.importance >= 5 %}importance-medium
+                                            {% if position.importance <= 2 %}importance-high
+                                            {% elif position.importance <= 5 %}importance-medium
                                             {% else %}importance-low{% endif %}">
-                                            {% if position.importance >= 8 %}HIGH
-                                            {% elif position.importance >= 5 %}MEDIUM
+                                            {% if position.importance <= 2 %}HIGH
+                                            {% elif position.importance <= 5 %}MEDIUM
                                             {% else %}LOW{% endif %}
                                         </span>
                                     </div>
