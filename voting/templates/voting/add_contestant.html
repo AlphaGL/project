@@ -435,6 +435,11 @@
         animation: spin 1s linear infinite;
     }
 
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
     /* Form Validation Styles */
     .form-control-contestant.valid {
         border-color: #10b981;
@@ -563,79 +568,68 @@
                 <form method="POST" enctype="multipart/form-data" id="contestantForm">
                     {% csrf_token %}
                     
-                    <!-- Enhanced Form Fields -->
-                    {% for field in form %}
-                        <div class="form-group-contestant">
-                            <label class="form-label-contestant">
-                                {% if field.name == 'name' %}
-                                    <i class="bi bi-person me-2"></i>Full Name
-                                {% elif field.name == 'position' %}
-                                    <i class="bi bi-award me-2"></i>Position
-                                {% elif field.name == 'image' %}
-                                    <i class="bi bi-camera me-2"></i>Profile Image
-                                {% elif field.name == 'manifesto' %}
-                                    <i class="bi bi-file-text me-2"></i>Manifesto
-                                {% else %}
-                                    <i class="bi bi-info-circle me-2"></i>{{ field.label }}
-                                {% endif %}
-                            </label>
-                            
-                            {% if field.name == 'image' %}
-                                <div class="file-upload-area" onclick="document.getElementById('{{ field.id_for_label }}').click()">
-                                    <div class="file-upload-icon">
-                                        <i class="bi bi-cloud-upload"></i>
-                                    </div>
-                                    <div class="file-upload-text">
-                                        <h4>Upload Profile Image</h4>
-                                        <p>Click to browse or drag and drop your image here<br>
-                                        <small>Supported formats: JPG, PNG, GIF (Max: 5MB)</small></p>
-                                    </div>
-                                    <input type="file" 
-                                           name="{{ field.name }}" 
-                                           id="{{ field.id_for_label }}"
-                                           class="file-input"
-                                           accept="image/*">
-                                </div>
-                                <div class="file-preview" id="filePreview">
-                                    <div class="file-preview-icon">
-                                        <i class="bi bi-image"></i>
-                                    </div>
-                                    <div class="file-preview-info">
-                                        <div class="file-preview-name" id="fileName"></div>
-                                        <div class="file-preview-size" id="fileSize"></div>
-                                    </div>
-                                </div>
-                            {% elif field.name == 'manifesto' %}
-                                <textarea name="{{ field.name }}" 
-                                         id="{{ field.id_for_label }}"
-                                         class="form-control-contestant" 
-                                         rows="4"
-                                         placeholder="Enter the candidate's manifesto and key promises..."
-                                         required></textarea>
-                            {% elif field.name == 'position' %}
-                                <select name="{{ field.name }}" 
-                                       id="{{ field.id_for_label }}"
-                                       class="form-control-contestant" 
-                                       required>
-                                    <option value="">Select a position...</option>
-                                    {% for choice in field.field.choices %}
-                                        {% if choice.0 %}
-                                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                            {% else %}
-                                <input type="text" 
-                                       name="{{ field.name }}" 
-                                       id="{{ field.id_for_label }}"
-                                       class="form-control-contestant" 
-                                       placeholder="Enter {{ field.label|lower }}"
-                                       {% if field.field.required %}required{% endif %}>
-                            {% endif %}
-                            
-                            <div class="validation-message" id="validation-{{ field.name }}"></div>
+                    <!-- Name Field -->
+                    <div class="form-group-contestant">
+                        <label class="form-label-contestant" for="id_name">
+                            <i class="bi bi-person me-2"></i>Full Name
+                        </label>
+                        <input type="text" 
+                               name="name" 
+                               id="id_name"
+                               class="form-control-contestant" 
+                               placeholder="Enter contestant's full name"
+                               required>
+                        <div class="validation-message" id="validation-name"></div>
+                    </div>
+
+                    <!-- Position Field -->
+                    <div class="form-group-contestant">
+                        <label class="form-label-contestant" for="id_position">
+                            <i class="bi bi-award me-2"></i>Position
+                        </label>
+                        <select name="position" 
+                               id="id_position"
+                               class="form-control-contestant" 
+                               required>
+                            <option value="">Select a position...</option>
+                            {% for position in positions %}
+                                <option value="{{ position.id }}">{{ position.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="validation-message" id="validation-position"></div>
+                    </div>
+
+                    <!-- Image Field -->
+                    <div class="form-group-contestant">
+                        <label class="form-label-contestant">
+                            <i class="bi bi-camera me-2"></i>Profile Image
+                        </label>
+                        <div class="file-upload-area" onclick="document.getElementById('id_image').click()">
+                            <div class="file-upload-icon">
+                                <i class="bi bi-cloud-upload"></i>
+                            </div>
+                            <div class="file-upload-text">
+                                <h4>Upload Profile Image</h4>
+                                <p>Click to browse or drag and drop your image here<br>
+                                <small>Supported formats: JPG, PNG, GIF (Max: 5MB)</small></p>
+                            </div>
+                            <input type="file" 
+                                   name="image" 
+                                   id="id_image"
+                                   class="file-input"
+                                   accept="image/*">
                         </div>
-                    {% endfor %}
+                        <div class="file-preview" id="filePreview">
+                            <div class="file-preview-icon">
+                                <i class="bi bi-image"></i>
+                            </div>
+                            <div class="file-preview-info">
+                                <div class="file-preview-name" id="fileName"></div>
+                                <div class="file-preview-size" id="fileSize"></div>
+                            </div>
+                        </div>
+                        <div class="validation-message" id="validation-image"></div>
+                    </div>
 
                     <button type="submit" class="btn-contestant" id="submitBtn">
                         <i class="bi bi-plus-circle me-2"></i>
@@ -658,7 +652,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const contestantForm = document.getElementById('contestantForm');
         const submitBtn = document.getElementById('submitBtn');
-        const fileInput = document.querySelector('.file-input');
+        const fileInput = document.getElementById('id_image');
         const filePreview = document.getElementById('filePreview');
         const fileUploadArea = document.querySelector('.file-upload-area');
 
@@ -768,14 +762,6 @@
                 }
             }
             
-            if (fieldName === 'manifesto' && value) {
-                if (value.length < 50) {
-                    field.classList.add('invalid');
-                    showValidationMessage(fieldName, 'Manifesto must be at least 50 characters long', 'error');
-                    return false;
-                }
-            }
-            
             if (value || !field.required) {
                 field.classList.add('valid');
                 showValidationMessage(fieldName, 'Looks good!', 'success');
@@ -809,7 +795,7 @@
                 }
             });
             
-            // Validate file if required
+            // Validate file if provided
             if (fileInput && fileInput.files.length > 0) {
                 if (!validateFile(fileInput.files[0])) {
                     isValid = false;
@@ -834,21 +820,7 @@
             // Disable form elements
             inputs.forEach(input => input.disabled = true);
             if (fileInput) fileInput.disabled = true;
-            
-            // Add subtle delay for better UX
-            setTimeout(() => {
-                // Form will submit naturally
-            }, 1000);
         });
-
-        // Auto-resize textarea
-        const textarea = document.querySelector('textarea');
-        if (textarea) {
-            textarea.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-            });
-        }
 
         // Add smooth focus animations
         inputs.forEach(input => {

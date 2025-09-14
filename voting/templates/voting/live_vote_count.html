@@ -457,10 +457,34 @@
         box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
         animation: refresh-spin 30s linear infinite;
         z-index: 1000;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .refresh-indicator:hover {
+        transform: scale(1.1);
+        box-shadow: 0 15px 40px rgba(239, 68, 68, 0.4);
     }
 
     .refresh-indicator i {
         font-size: 1.5rem;
+    }
+
+    .refresh-countdown {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #ffffff;
+        color: var(--danger-red);
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     @keyframes refresh-spin {
@@ -479,6 +503,65 @@
         align-items: center;
         justify-content: center;
         gap: 0.75rem;
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(10px);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .loading-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .loading-content {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 3rem;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        animation: loadingPulse 2s infinite;
+    }
+
+    @keyframes loadingPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .loading-spinner {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        font-weight: 600;
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .loading-subtext {
+        opacity: 0.9;
+        font-size: 1rem;
     }
 
     /* Mobile responsiveness */
@@ -555,6 +638,17 @@
     <div class="pulse-circle"></div>
 </div>
 
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="loading-spinner">
+            <i class="fas fa-sync-alt"></i>
+        </div>
+        <div class="loading-text">Updating Results...</div>
+        <div class="loading-subtext">Fetching latest vote data</div>
+    </div>
+</div>
+
 <!-- Main dashboard content -->
 <div class="dashboard-container">
     <div class="container">
@@ -581,7 +675,7 @@
                                 This dashboard contains sensitive election data. Please enter the authorized access code to view live vote counts.
                             </p>
                             
-                            <form method="POST">
+                            <form method="POST" id="accessForm">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label for="access_code" class="form-label">
@@ -596,7 +690,7 @@
                                            required
                                            autocomplete="current-password">
                                 </div>
-                                <button type="submit" class="btn-access">
+                                <button type="submit" class="btn-access" id="accessBtn">
                                     <i class="fas fa-unlock"></i>
                                     Access Dashboard
                                 </button>
@@ -666,103 +760,157 @@
 
 <!-- Refresh indicator -->
 {% if vote_data %}
-    <div class="refresh-indicator" title="Auto-refresh active">
+    <div class="refresh-indicator" id="refreshIndicator" title="Auto-refresh in 30 seconds">
         <i class="fas fa-sync-alt"></i>
+        <div class="refresh-countdown" id="refreshCountdown">30</div>
     </div>
 {% endif %}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Enhanced auto-refresh with visual feedback
+        // Enhanced auto-refresh with proper cleanup
         {% if vote_data %}
             let refreshTimer = 30;
-            const refreshIndicator = document.querySelector('.refresh-indicator');
+            let countdownInterval;
+            let isRefreshing = false;
             
-            // Update refresh indicator with countdown
-            const countdownInterval = setInterval(function() {
-                refreshTimer--;
-                if (refreshIndicator) {
-                    refreshIndicator.title = `Auto-refresh in ${refreshTimer} seconds`;
+            const refreshIndicator = document.getElementById('refreshIndicator');
+            const refreshCountdown = document.getElementById('refreshCountdown');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            function startRefreshCountdown() {
+                // Clear any existing interval
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
                 }
                 
-                if (refreshTimer <= 0) {
-                    // Show loading state
-                    document.body.style.opacity = '0.8';
-                    document.body.style.pointerEvents = 'none';
+                refreshTimer = 30;
+                
+                countdownInterval = setInterval(function() {
+                    if (isRefreshing) {
+                        return; // Don't continue countdown if already refreshing
+                    }
                     
-                    // Add loading overlay
-                    const loadingOverlay = document.createElement('div');
-                    loadingOverlay.innerHTML = `
-                        <div style="
-                            position: fixed;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
-                            background: rgba(37, 99, 235, 0.9);
-                            color: white;
-                            padding: 2rem 3rem;
-                            border-radius: 16px;
-                            backdrop-filter: blur(10px);
-                            z-index: 9999;
-                            text-align: center;
-                            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-                        ">
-                            <i class="fas fa-sync-alt fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                            <div style="font-weight: 600; font-size: 1.2rem;">Updating Results...</div>
-                        </div>
-                    `;
-                    document.body.appendChild(loadingOverlay);
+                    refreshTimer--;
                     
-                    // Reload page
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                    // Update UI elements
+                    if (refreshIndicator) {
+                        refreshIndicator.title = `Auto-refresh in ${refreshTimer} seconds`;
+                    }
+                    if (refreshCountdown) {
+                        refreshCountdown.textContent = refreshTimer;
+                    }
+                    
+                    // Start refresh process
+                    if (refreshTimer <= 0) {
+                        initiateRefresh();
+                    }
+                }, 1000);
+            }
+            
+            function initiateRefresh() {
+                if (isRefreshing) {
+                    return; // Prevent multiple refresh attempts
                 }
-            }, 1000);
+                
+                isRefreshing = true;
+                
+                // Clear the countdown interval
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
+                
+                // Show loading overlay
+                if (loadingOverlay) {
+                    loadingOverlay.classList.add('active');
+                }
+                
+                // Disable page interactions
+                document.body.style.pointerEvents = 'none';
+                
+                // Reload the page after a short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
+            
+            // Manual refresh functionality
+            if (refreshIndicator) {
+                refreshIndicator.addEventListener('click', function() {
+                    initiateRefresh();
+                });
+            }
+            
+            // Keyboard shortcut for manual refresh
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'r' && e.ctrlKey) {
+                    e.preventDefault();
+                    initiateRefresh();
+                }
+            });
+            
+            // Handle page visibility changes (pause when hidden)
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    // Page is hidden, pause countdown
+                    if (countdownInterval) {
+                        clearInterval(countdownInterval);
+                    }
+                } else {
+                    // Page is visible again, resume countdown
+                    if (!isRefreshing) {
+                        startRefreshCountdown();
+                    }
+                }
+            });
+            
+            // Handle before unload to prevent stuck states
+            window.addEventListener('beforeunload', function() {
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
+                isRefreshing = true;
+            });
+            
+            // Start the initial countdown
+            startRefreshCountdown();
         {% endif %}
         
         // Enhanced access code form
-        const accessForm = document.querySelector('form');
+        const accessForm = document.getElementById('accessForm');
         if (accessForm) {
-            const accessInput = document.querySelector('#access_code');
+            const accessInput = document.getElementById('access_code');
+            const accessBtn = document.getElementById('accessBtn');
             
             accessForm.addEventListener('submit', function(e) {
-                const submitBtn = this.querySelector('.btn-access');
-                const originalText = submitBtn.innerHTML;
-                
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-                submitBtn.disabled = true;
-                
-                // Re-enable if there's an error (page doesn't redirect)
-                setTimeout(() => {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }, 3000);
-            });
-            
-            // Add keyboard shortcut
-            accessInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    accessForm.submit();
+                if (!accessInput.value.trim()) {
+                    e.preventDefault();
+                    accessInput.focus();
+                    return;
                 }
+                
+                const originalText = accessBtn.innerHTML;
+                
+                accessBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                accessBtn.disabled = true;
+                accessInput.disabled = true;
+                
+                // Re-enable if form submission fails
+                setTimeout(() => {
+                    accessBtn.innerHTML = originalText;
+                    accessBtn.disabled = false;
+                    accessInput.disabled = false;
+                }, 5000);
             });
         }
         
         // Add smooth scroll behavior
         document.documentElement.style.scrollBehavior = 'smooth';
         
-        // Add keyboard shortcuts for accessibility
-        document.addEventListener('keydown', function(e) {
-            // R key to manually refresh
-            if (e.key === 'r' && e.ctrlKey) {
-                e.preventDefault();
-                window.location.reload();
-            }
-        });
-        
         // Add visual feedback for position cards
         const positionCards = document.querySelectorAll('.position-card');
-        positionCards.forEach((card, index) => {
+        positionCards.forEach((card) => {
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-8px) scale(1.02)';
             });
@@ -835,6 +983,97 @@
         }
     `;
     document.head.appendChild(style);
+    
+    // Error handling for network issues
+    window.addEventListener('error', function(e) {
+        console.error('Page error:', e);
+        // If there's a critical error, show a user-friendly message
+        if (e.message && e.message.includes('Loading')) {
+            const errorNotification = document.createElement('div');
+            errorNotification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: linear-gradient(135deg, #ef4444, #dc2626);
+                    color: white;
+                    padding: 1rem 2rem;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+                    z-index: 10000;
+                    text-align: center;
+                    font-weight: 600;
+                ">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Connection issue detected. Refresh manually if needed.</span>
+                </div>
+            `;
+            
+            document.body.appendChild(errorNotification);
+            
+            setTimeout(() => {
+                errorNotification.remove();
+            }, 5000);
+        }
+    });
+    
+    // Handle network connectivity
+    window.addEventListener('online', function() {
+        const onlineNotification = document.createElement('div');
+        onlineNotification.innerHTML = `
+            <div style="
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 0.75rem 1.25rem;
+                border-radius: 8px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+                z-index: 9999;
+                font-weight: 600;
+                font-size: 0.9rem;
+            ">
+                <i class="fas fa-wifi"></i>
+                Connection restored
+            </div>
+        `;
+        
+        document.body.appendChild(onlineNotification);
+        
+        setTimeout(() => {
+            onlineNotification.remove();
+        }, 3000);
+    });
+    
+    window.addEventListener('offline', function() {
+        const offlineNotification = document.createElement('div');
+        offlineNotification.innerHTML = `
+            <div style="
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+                padding: 0.75rem 1.25rem;
+                border-radius: 8px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+                z-index: 9999;
+                font-weight: 600;
+                font-size: 0.9rem;
+            ">
+                <i class="fas fa-wifi-slash"></i>
+                Connection lost
+            </div>
+        `;
+        
+        document.body.appendChild(offlineNotification);
+        
+        setTimeout(() => {
+            offlineNotification.remove();
+        }, 5000);
+    });
 </script>
 
 <!-- Font Awesome for icons (ensure this is included in your base template) -->
