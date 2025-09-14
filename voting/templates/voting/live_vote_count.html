@@ -673,19 +673,34 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Enhanced auto-refresh with visual feedback
+        // Enhanced auto-refresh with visual feedback - FIXED VERSION
         {% if vote_data %}
             let refreshTimer = 30;
+            let countdownInterval = null;
+            let hasRefreshed = false; // Flag to prevent multiple refreshes
             const refreshIndicator = document.querySelector('.refresh-indicator');
             
-            // Update refresh indicator with countdown
-            const countdownInterval = setInterval(function() {
+            // Clear any existing intervals first (safety measure)
+            if (window.dashboardRefreshInterval) {
+                clearInterval(window.dashboardRefreshInterval);
+            }
+            
+            // Start the countdown
+            countdownInterval = setInterval(function() {
+                if (hasRefreshed) {
+                    clearInterval(countdownInterval);
+                    return;
+                }
+                
                 refreshTimer--;
                 if (refreshIndicator) {
                     refreshIndicator.title = `Auto-refresh in ${refreshTimer} seconds`;
                 }
                 
                 if (refreshTimer <= 0) {
+                    hasRefreshed = true; // Prevent multiple executions
+                    clearInterval(countdownInterval); // Clear the interval FIRST
+                    
                     // Show loading state
                     document.body.style.opacity = '0.8';
                     document.body.style.pointerEvents = 'none';
@@ -713,12 +728,25 @@
                     `;
                     document.body.appendChild(loadingOverlay);
                     
-                    // Reload page
+                    // Store the interval reference globally for cleanup
+                    window.dashboardRefreshInterval = countdownInterval;
+                    
+                    // Reload page after a short delay
                     setTimeout(() => {
                         window.location.reload();
                     }, 1000);
                 }
             }, 1000);
+            
+            // Store the interval reference globally for cleanup
+            window.dashboardRefreshInterval = countdownInterval;
+            
+            // Clean up on page unload
+            window.addEventListener('beforeunload', function() {
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
+            });
         {% endif %}
         
         // Enhanced access code form
