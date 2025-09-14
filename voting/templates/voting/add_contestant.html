@@ -603,13 +603,6 @@
                                         <div class="file-preview-size" id="fileSize"></div>
                                     </div>
                                 </div>
-                            {% elif field.name == 'manifesto' %}
-                                <textarea name="{{ field.name }}" 
-                                         id="{{ field.id_for_label }}"
-                                         class="form-control-contestant" 
-                                         rows="4"
-                                         placeholder="Enter the candidate's manifesto and key promises..."
-                                         required></textarea>
                             {% elif field.name == 'position' %}
                                 <select name="{{ field.name }}" 
                                        id="{{ field.id_for_label }}"
@@ -766,13 +759,6 @@
                 }
             }
             
-            if (fieldName === 'manifesto' && value) {
-                if (value.length < 50) {
-                    field.classList.add('invalid');
-                    showValidationMessage(fieldName, 'Manifesto must be at least 50 characters long', 'error');
-                    return false;
-                }
-            }
             
             if (value || !field.required) {
                 field.classList.add('valid');
