@@ -13,9 +13,11 @@ class Position(models.Model):
         (5, "5 - Medium"),
         (6, "6"),
         (7, "7"),
-        (8, "8 - Low"),
-        (9, "9 - Very Low"),
-        (10, "10 - Lowest"),
+        (8, "8"),
+        (9, "9"),
+        (10, "10 - Low"),
+        (11, "11 - Very Low"),
+        (12, "9 - Lowest"),
     ]
 
     name = models.CharField(max_length=100)
