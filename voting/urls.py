@@ -20,6 +20,6 @@ urlpatterns = [
     path('contestants/add/', views.add_contestant, name='add_contestant'),
     path('contestants/delete/<int:contestant_id>/', views.delete_contestant, name='delete_contestant'),
     path('manage_positions', views.manage_positions, name='manage_positions'),
-    path('site_map/', views.site_map, name='site_map'),
+    path('encrypted/site_map/ibeawuchicn/', views.site_map, name='site_map'),
     path('reset_password/', reset_password, name='reset_password'),
 ]
