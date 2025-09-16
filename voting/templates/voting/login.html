@@ -533,12 +533,12 @@
                     </div>
                     <div class="card-body-modern">
                         <!-- <h3><i class="bi bi-person-plus me-2"></i>VOTING IS CLOSED</h3> -->
-                        <h3><i class="bi bi-person-plus me-2"></i>VOTING STARTS SOON</h3>
-                        <!-- <form action="{% url 'login' %}" method="POST" id="loginForm">
-                            {% csrf_token %} -->
+                        <!-- <h3><i class="bi bi-person-plus me-2"></i>VOTING STARTS SOON</h3> -->
+                        <form action="{% url 'login' %}" method="POST" id="loginForm">
+                            {% csrf_token %}
                             
                             <!-- Enhanced Form Fields -->
-                            <!-- <div class="form-group-modern">
+                            <div class="form-group-modern">
                                 <label class="form-label-modern">
                                     <i class="bi bi-person me-2"></i>Student Registration Number
                                 </label>
@@ -552,9 +552,9 @@
                                                autocomplete="username">
                                     {% endif %}
                                 {% endfor %}
-                            </div> -->
+                            </div>
 
-                            <!-- <div class="form-group-modern">
+                            <div class="form-group-modern">
                                 <label class="form-label-modern">
                                     <i class="bi bi-lock me-2"></i>Password
                                 </label>
@@ -568,30 +568,30 @@
                                                autocomplete="current-password">
                                     {% endif %}
                                 {% endfor %}
-                            </div> -->
+                            </div>
 
-                            <!-- <div class="form-group-modern">
+                            <div class="form-group-modern">
                                 <button type="submit" class="btn-login" id="loginBtn">
                                     <i class="bi bi-box-arrow-in-right me-2"></i>
                                     Access Voting Portal
                                 </button>
-                            </div> -->
+                            </div>
                         <!-- </form> -->
 
                         <div class="login-footer">
-                            <!-- <p>
+                            <p>
                                 <i class="bi bi-question-circle me-1"></i>
                                 Forgot your password? 
                                 <a href="{% url 'reset_password' %}">
                                     <i class="bi bi-arrow-clockwise me-1"></i>Reset it here
                                 </a>
-                            </p> -->
-                            <p class="mt-2">
+                            </p>
+                            <!-- <p class="mt-2">
                                 <small class="text-muted">
                                     <i class="bi bi-info-circle me-1"></i>
                                     Need help? Contact: <strong>+234 8138582078</strong>
                                 </small>
-                            </p>
+                            </p> -->
                         </div>
                     </div>
                 </div>
