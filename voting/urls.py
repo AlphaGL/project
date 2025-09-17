@@ -4,22 +4,57 @@ from .views import BmeLoginView, vote_position, next_position, vote_view, admin_
 from .views import reset_password
 
 urlpatterns = [
-    path('', BmeLoginView.as_view(), name='login'),
-    path('register/', register_student, name='register_student'),
-    path('vote/<int:position_id>/', vote_position, name='vote_position'),
-    path('next_position/<int:position_id>/', next_position, name='next_position'),
-    path('vote/', vote_view, name='vote'),
-    path('admin_dashboard/', admin_dashboard, name='admin_dashboard'),
-    path('completed/', CompletedView.as_view(), name='completed'),
-    path('reset/', views.reset_all, name='reset_all'),
-    path('live_vote_count/', views.live_vote_count, name='live_vote_count'),
-    path('Security-Check/', views.enter_access_code, name='enter_access_code'),
-    path('students/', views.list_students, name='list_students'),
-    path('logout/', views.logout, name='logout'),
-    path('contestants/', views.list_contestants, name='list_contestants'),
-    path('contestants/add/', views.add_contestant, name='add_contestant'),
-    path('contestants/delete/<int:contestant_id>/', views.delete_contestant, name='delete_contestant'),
-    path('manage_positions', views.manage_positions, name='manage_positions'),
-    path('encrypted/site_map/ibeawuchicn/', views.site_map, name='site_map'),
-    path('reset_password/', reset_password, name='reset_password'),
+    # Homepage/Login - Main entry point
+    path('xk7m9w2q8p3n5v1c6b4z0l8j2f9g6h3k7m1w5q8p2n4v7c9b6z0l3j8f5g2h9k6m4w1q7p0n3v6c8b5z2l9j4f7g0h2k5m8w3q6p9n1v4c7b0z5l2j9f6g3h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j/', BmeLoginView.as_view(), name='login'),
+    
+    # Student Registration
+    path('auth_9x4k2m7w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z/', register_student, name='register_student'),
+    
+    # Vote Position
+    path('cast_8z3l6j9f2g5h0k4m7w1q8p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l/<int:position_id>/', vote_position, name='vote_position'),
+    
+    # Next Position
+    path('proceed_5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z/<int:position_id>/', next_position, name='next_position'),
+    
+    # Main Vote View
+    path('ballot_2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6/', vote_view, name='vote'),
+    
+    # Admin Dashboard
+    path('control_panel_4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5/', admin_dashboard, name='admin_dashboard'),
+    
+    # Completed View
+    path('finalization_6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7/', CompletedView.as_view(), name='completed'),
+    
+    # Reset All
+    path('system_purge_1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5/', views.reset_all, name='reset_all'),
+    
+    # Live Vote Count
+    path('realtime_metrics_7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0/', views.live_vote_count, name='live_vote_count'),
+    
+    # Security Check
+    path('access_verification_3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0/', views.enter_access_code, name='enter_access_code'),
+    
+    # List Students
+    path('roster_database_9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6/', views.list_students, name='list_students'),
+    
+    # Logout
+    path('session_termination_5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5/', views.logout, name='logout'),
+    
+    # List Contestants
+    path('candidate_registry_8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4/', views.list_contestants, name='list_contestants'),
+    
+    # Add Contestant
+    path('enroll_candidate_0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0/', views.add_contestant, name='add_contestant'),
+    
+    # Delete Contestant
+    path('remove_candidate_4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3/<int:contestant_id>/', views.delete_contestant, name='delete_contestant'),
+    
+    # Manage Positions
+    path('position_configuration_6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2f0g5h8k3m6w1q9p4n7v2c0b5z8l3j6f1g9h4k7m2w0q5p8n3v6c1b9z4l7j2/', views.manage_positions, name='manage_positions'),
+    
+    # Site Map
+    path('navigation_schema_2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n1v4c7b0z3l6j9f2g5h8k1m4w7q0p3n6v9c2b5z8l1j4f7g0h3k6m9w2q5p8n/', views.site_map, name='site_map'),
+    
+    # Reset Password
+    path('credential_recovery_7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7w0q3p6n9v2c5b8z1l4j7f0g3h6k9m2w5q8p1n4v7c0b3z6l9j2f5g8h1k4m7/', reset_password, name='reset_password'),
 ]
