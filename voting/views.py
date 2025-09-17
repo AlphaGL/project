@@ -131,7 +131,7 @@ def enter_access_code(request):
         form = AccessCodeForm(request.POST)
         if form.is_valid():
             access_code = form.cleaned_data.get('access_code')
-            if access_code == 'BMEFUTO':  # Replace with your actual access code logic
+            if access_code == 'EPEFUTO':  # Replace with your actual access code logic
                 request.session['has_access'] = True  # Set session variable
                 return redirect('list_students')  # Redirect to the list_students view
             else:
@@ -218,7 +218,7 @@ def reset_all(request):
 
 
 
-ACCESS_CODE = 'BMEFUTO'  # Set your access code {this is for live count and vote reseting}
+ACCESS_CODE = 'EPEFUTO'  # Set your access code {this is for live count and vote reseting}
 
 def live_vote_count(request):
     if request.method == 'POST':
