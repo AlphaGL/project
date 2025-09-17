@@ -39,10 +39,10 @@ ALLOWED_HOSTS = ["https://nabes-bme-election.onrender.com", "nabes-bme-election.
 
 # Database
 DATABASES = {
-    # neon.tech
-    ## Email: thewatch2d@gmail.com
+    # supabase
+    ## Email: hospassist1@gmail.com
     'default': dj_database_url.parse(
-        'postgresql://neondb_owner:npg_FwbGQ8WoVn1r@ep-odd-glitter-ad4ndj5m-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+        'postgresql://postgres.mxocpxgfedpdruvvusro:electricalps_db@aws-1-us-east-1.pooler.supabase.com:6543/postgres'
     ),
 }
 # Application definition
